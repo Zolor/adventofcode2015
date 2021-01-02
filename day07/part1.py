@@ -1,4 +1,4 @@
-data = open("testinput.txt").read().split("\n")
+data = open("input.txt").read().split("\n")
 
 wires = {}
 counter = 1
@@ -8,8 +8,6 @@ while True:
     for line in data:
         inp, outp = line.split(" -> ")
         inp = inp.split()
-        print(inp)
-        print(outp)
         if "NOT" in inp:
             if inp[1] not in wires:
                 new_lista.append(line)
@@ -29,13 +27,41 @@ while True:
             else:
                 wires[outp] = int(wires.get(inp[0])) << int(inp[2])
         elif "AND" in inp:
-            if inp[2] not in wires:
+            if inp[0].isnumeric() and inp[2].isnumeric():
+                wires[outp] = int(inp[0]) & int(inp[2])
+            elif inp[2].isnumeric():
+                if inp[0] not in wires:
+                    new_lista.append(line)
+                    continue
+                else:
+                    wires[outp] = int(wires.get(inp[0])) & int(inp[2])
+            elif inp[0].isnumeric():
+                if inp[2] not in wires:
+                    new_lista.append(line)
+                    continue
+                else:
+                    wires[outp] = int(inp[0]) & int(wires.get(inp[2]))
+            elif inp[2] not in wires or inp[0] not in wires:
                 new_lista.append(line)
                 continue
             else:
                 wires[outp] = int(wires.get(inp[0])) & int(wires.get(inp[2]))
         elif "OR" in inp:
-            if inp[2] not in wires:
+            if inp[0].isnumeric() and inp[2].isnumeric():
+                wires[outp] = int(inp[0]) | int(inp[2])
+            elif inp[2].isnumeric():
+                if inp[0] not in wires:
+                    new_lista.append(line)
+                    continue
+                else:
+                    wires[outp] = int(wires.get(inp[0])) | int(inp[2])
+            elif inp[0].isnumeric():
+                if inp[2] not in wires:
+                    new_lista.append(line)
+                    continue
+                else:
+                    wires[outp] = int(inp[0]) | int(wires.get(inp[2]))
+            elif inp[2] not in wires or inp[0] not in wires:
                 new_lista.append(line)
                 continue
             else:
@@ -44,13 +70,14 @@ while True:
         else:
             if inp[0] in wires:
                 wires[outp] = wires.get(inp[0])
-            else:
+            elif inp[0].isnumeric():
                 wires[outp] = inp[0]
+            else:
+                new_lista.append(line)
+                continue
     data = new_lista
     counter += 1
-    print(data)
-    if len(data) == 0 or counter > 7:
+    if len(data) == 0:
         break
 
-
-print(wires)
+print(wires.get("a"))
