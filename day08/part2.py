@@ -4,6 +4,7 @@ summa = 0
 
 for line in data:
     new_line = ""
+    print(line)
     for n, l in enumerate(line):
         if n == 0:
             new_line += '\"\\"'
@@ -15,11 +16,18 @@ for line in data:
             if l == "\\" and line[n + 1] == "x":
                 new_line += "\\"
                 new_line += l
+            elif l == "\\" and line[n + 1] == '"':
+                new_line += "\\"
+                new_line += l
             elif l == "\\":
-                new_line += "\\\\"
+                new_line += "\\"
+                new_line += l
+            elif l == '"':
+                new_line += "\\"
                 new_line += l
             else:
                 new_line += l
+    print(new_line)
     summa += len(new_line) - len(line) 
 
 print(summa)
